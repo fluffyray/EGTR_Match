@@ -6,6 +6,9 @@
 #define LOWER_BOTMOTOR_H
 
 #include "main.h"
+#include "stm32f4xx_hal_tim.h "
+#include "stdlib.h"
+#include "string.h"
 
 /*
  *  @brief Enum for Motors which represents as four motors in bot
@@ -18,14 +21,18 @@ typedef enum MotorPos{
 } MotorPos;
 
 typedef struct MotorSpeed{
-    int LeftFrontMotorSpeed;
-    int RightFrontMotorSpeed;
-    int LeftBackMotorSpeed;
-    int RightBackMotorSpeed;
+    float LeftFrontMotorSpeed;
+    float RightFrontMotorSpeed;
+    float LeftBackMotorSpeed;
+    float RightBackMotorSpeed;
 }MotorSpeed;
 
-extern MotorSpeed motorSpeed;
+typedef void* BotMotor;
+BotMotor BOTMOTOR; // Global var for motor
 
-void BotMotor_setMotorSpeed(MotorPos motorPos, int speed);
+void setTargetSpeed_BotMotor(BotMotor botMotor,MotorSpeed* targetSpeed);
+void getSampleSpeed_BotMotor(BotMotor botMotor,MotorSpeed* sampleSpeed);
+
+void TIMSampleHander(BotMotor botMotor,float sampleTick);
 
 #endif //LOWER_BOTMOTOR_H
