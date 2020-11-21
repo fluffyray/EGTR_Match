@@ -10,11 +10,11 @@
 
 typedef void* PICalculator;
 
-void getResults_PICalculator(PICalculator piCalculator,int* targetValue,int* sampleValue,int* value);
+void getResults_PICalculator(PICalculator piCalculator,const float* targetValue,const float* sampleValue,float* value);
 
-void changePrams_PICalculator(PICalculator piCalculator,int parmP,int parmI);
+void changePrams_PICalculator(PICalculator piCalculator,float parmP,float parmI);
 
 void delete_PICalculator(PICalculator piCalculator);
 
-PICalculator init_PICalculator(int parmP,int parmI,int valueSize);
+PICalculator init_PICalculator(float parmP,float parmI,int valueSize);
 #endif //LOWER_PICALCULATOR_H

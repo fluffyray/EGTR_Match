@@ -5,47 +5,46 @@
 #include "picalculator.h"
 
 typedef struct ImpPICalculator{
-    int parmP;
-    int parmI;
+    float parmP;
+    float parmI;
     int valueSize;
-    int* PbiasValue;
+    float * PbiasValue;
 }ImpPICalculator;
 
-PICalculator init_PICalculator(int parmP,int parmI,int valueSize){
+PICalculator init_PICalculator(float parmP,float parmI,int valueSize){
     ImpPICalculator* PIcalculator = (ImpPICalculator*)malloc(sizeof(struct ImpPICalculator));
     PIcalculator->parmI = parmI;
     PIcalculator->parmP = parmP;
-    PIcalculator->PbiasValue = (int*)malloc(valueSize * sizeof(int));
-    memset(PIcalculator->PbiasValue, 0, valueSize * sizeof(int));
-
+    PIcalculator->PbiasValue = (float *)malloc(valueSize * sizeof(float ));
+    memset(PIcalculator->PbiasValue, 0, valueSize * sizeof(float ));
     return PIcalculator;
 }
 
-void getResults_PICalculator(PICalculator piCalculator,int* targetValue,int* sampleValue,int* value){
+void getResults_PICalculator(PICalculator piCalculator,const float * targetValue,const float * sampleValue,float * value){
     if (NULL == piCalculator) return;
-    ImpPICalculator* ImpPIcalculator = (ImpPICalculator*) piCalculator;
-    int* Cbias = (int*)malloc(ImpPIcalculator->valueSize*sizeof(int));
-    for (int i = 0; i < ImpPIcalculator->valueSize-1; ++i) {
+    ImpPICalculator* impPIcalculator = (ImpPICalculator*) piCalculator;
+    float * Cbias = (float *)malloc(impPIcalculator->valueSize * sizeof(float ));
+    for (int i = 0; i < impPIcalculator->valueSize - 1; ++i) {
         Cbias[i] = targetValue[i] - sampleValue[i];
-        value[i] =ImpPIcalculator->parmP*(Cbias[i] - ImpPIcalculator->PbiasValue[i])
-                  + ImpPIcalculator->parmI*Cbias[i]; //calculate value
+        value[i] = impPIcalculator->parmP * (Cbias[i] - impPIcalculator->PbiasValue[i])
+                   + impPIcalculator->parmI * Cbias[i]; //calculate value
     }
-    memcpy(ImpPIcalculator->PbiasValue,Cbias,ImpPIcalculator->valueSize*sizeof(int));// save bias
+    memcpy(impPIcalculator->PbiasValue, Cbias, impPIcalculator->valueSize * sizeof(float ));// save bias
     free(Cbias);
     Cbias = NULL;
 }
 
-void changePrams_PICalculator(PICalculator piCalculator,int parmP,int parmI){
+void changePrams_PICalculator(PICalculator piCalculator,float parmP,float parmI){
     if (NULL == piCalculator) return;
-    ImpPICalculator* ImpPIcalculator = (ImpPICalculator*) piCalculator;
-    ImpPIcalculator->parmP = parmP;
-    ImpPIcalculator->parmI = parmI;
+    ImpPICalculator* impPIcalculator = (ImpPICalculator*) piCalculator;
+    impPIcalculator->parmP = parmP;
+    impPIcalculator->parmI = parmI;
 }
 
 void delete_PICalculator(PICalculator piCalculator){
     if (NULL == piCalculator) return;
-    ImpPICalculator* ImpPIcalculator = (ImpPICalculator*) piCalculator;
-    free(ImpPIcalculator->PbiasValue);
-    ImpPIcalculator->PbiasValue = NULL;
-    free(ImpPIcalculator);
+    ImpPICalculator* impPIcalculator = (ImpPICalculator*) piCalculator;
+    free(impPIcalculator->PbiasValue);
+    impPIcalculator->PbiasValue = NULL;
+    free(impPIcalculator);
 }
