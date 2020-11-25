@@ -7,9 +7,9 @@
 
 #include "serialportdevice.h"
 
-class Botdevice: public SerialPortDevice{
+class BotDevice: public SerialPortDevice{
 public:
-    Botdevice();
+    BotDevice();
     void setTargetVelocity(std::vector<float> velocities);
 private:
 
