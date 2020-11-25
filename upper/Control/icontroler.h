@@ -29,12 +29,21 @@ IControler* className::getInstance(){\
 ControlerRegister className::controlerregister(controlername,className::getInstance);
 
 /*
- * @brief
+ * @brief 控制器接口，所有控制器实现该接口,并使用以上两个宏定义
  */
 class IControlor{
 public:
-    IControlor()=default;
+
+    /*
+     * @brief 在控制器初始化时，该函数会被调用
+     */
     virtual void already() = 0;
+
+    /*
+     * @brief 在系统每个控制周期中，该函数会被调用
+     */
     virtual void processing(float deta) = 0;
+
+    IControlor()=default;
     virtual ~IControlor()=default;
 };
