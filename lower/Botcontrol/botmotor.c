@@ -24,6 +24,12 @@ void setTargetSpeed_BotMotor(BotMotor botMotor,MotorSpeed* targetSpeed){
 
 }
 
+void getTargetSpeed_BotMotor(BotMotor botMotor,MotorSpeed* targetSpeed){
+    if(NULL == botMotor) return;
+    ImpBotMotor* impBotMotor = (ImpBotMotor*)botMotor;
+    memcpy(targetSpeed,&(impBotMotor->targetMotorSpeed),4*sizeof(float ));
+}
+
 void getSampleSpeed_BotMotor(BotMotor botMotor,MotorSpeed* sampleSpeed){
     if(NULL == botMotor) return;
     ImpBotMotor* impBotMotor = (ImpBotMotor*)botMotor;

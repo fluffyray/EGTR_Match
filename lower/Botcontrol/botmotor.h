@@ -31,6 +31,7 @@ typedef void* BotMotor;
 BotMotor BOTMOTOR; // Global var for motor
 
 void setTargetSpeed_BotMotor(BotMotor botMotor,MotorSpeed* targetSpeed);
+void getTargetSpeed_BotMotor(BotMotor botMotor,MotorSpeed* targetSpeed);
 void getSampleSpeed_BotMotor(BotMotor botMotor,MotorSpeed* sampleSpeed);
 
 void TIMSampleHander(BotMotor botMotor,float sampleTick);
