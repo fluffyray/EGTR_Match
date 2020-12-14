@@ -6,6 +6,11 @@
 #define LOWER_MOTORDRIVER_H
 
 #include "picalculator.h"
+#include "botmotor.h"
+
+#define MOTORNUM ((int)4)
+
+const float MAXSPEED = 10;
 
 typedef struct MotorDriver{
 
