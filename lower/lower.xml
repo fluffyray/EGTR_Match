@@ -3,7 +3,7 @@
   <board id="lower">
     <name>lower</name>
     <mcuId>STM32F407VGTx</mcuId>  <!-- mcu-->
-    <dbgIF>JTAG</dbgIF>
+    <dbgIF>SWD</dbgIF>
     <dbgDEV>ST-LinkV2-1</dbgDEV>
   </board>
 </targetDefinitions>
