@@ -28,7 +28,7 @@ typedef struct MotorSpeed{
 }MotorSpeed;
 
 typedef void* BotMotor;
-BotMotor BOTMOTOR; // Global var for motor
+extern BotMotor BOTMOTOR; // Global var for motor
 
 void setTargetSpeed_BotMotor(BotMotor botMotor,MotorSpeed* targetSpeed);
 void getTargetSpeed_BotMotor(BotMotor botMotor,MotorSpeed* targetSpeed);

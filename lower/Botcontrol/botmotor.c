@@ -6,6 +6,7 @@
 
 #define ENCODER_VALUE2RAD(value) ((float)(value)/((13.0f)*(30.0f)) * (float)(6.283185307))
 
+BotMotor BOTMOTOR;
 
 typedef struct ImpBotMotor {
     MotorSpeed targetMotorSpeed;
@@ -39,18 +40,19 @@ void getSampleSpeed_BotMotor(BotMotor botMotor,MotorSpeed* sampleSpeed){
 void TIMSampleHander(BotMotor botMotor,float sampleTick){
     if(NULL == botMotor) return;
     ImpBotMotor* impBotMotor = (ImpBotMotor*)botMotor;
+		
     //Sample encoder value
-    int LeftFrontEncoderValue  = __HAL_TIM_GET_COUNTER(&htim5);
-    int RightFrontEncoderValue = __HAL_TIM_GET_COUNTER(&htim3);
-    int LeftBackEncoderValue   = __HAL_TIM_GET_COUNTER(&htim4);
-    int RightBackEncoderValue  = __HAL_TIM_GET_COUNTER(&htim8);
+		int LeftFrontEncoderValue     = -(short)__HAL_TIM_GET_COUNTER(&htim5);
+    int RightFrontEncoderValue = (short)__HAL_TIM_GET_COUNTER(&htim3);
+    int LeftBackEncoderValue   = -(short)__HAL_TIM_GET_COUNTER(&htim4);
+    int RightBackEncoderValue  = (short)__HAL_TIM_GET_COUNTER(&htim8);
 
 
     //convert encoder value to rad/s
-    impBotMotor->sampleMotorSpeed.LeftFrontMotorSpeed  = (__HAL_TIM_IS_TIM_COUNTING_DOWN(&htim5) == 0 ? -1.0f :1.0f) * ENCODER_VALUE2RAD(LeftFrontEncoderValue)  / sampleTick;
-    impBotMotor->sampleMotorSpeed.RightFrontMotorSpeed = (__HAL_TIM_IS_TIM_COUNTING_DOWN(&htim3) == 0 ? -1.0f :1.0f) * ENCODER_VALUE2RAD(RightFrontEncoderValue) / sampleTick;
-    impBotMotor->sampleMotorSpeed.LeftBackMotorSpeed   = (__HAL_TIM_IS_TIM_COUNTING_DOWN(&htim4) == 0 ? -1.0f :1.0f) * ENCODER_VALUE2RAD(LeftBackEncoderValue)   / sampleTick;
-    impBotMotor->sampleMotorSpeed.RightBackMotorSpeed  = (__HAL_TIM_IS_TIM_COUNTING_DOWN(&htim8) == 0 ? -1.0f :1.0f) * ENCODER_VALUE2RAD(RightBackEncoderValue)  / sampleTick;
+    impBotMotor->sampleMotorSpeed.LeftFrontMotorSpeed  = ENCODER_VALUE2RAD(LeftFrontEncoderValue)  / sampleTick;
+    impBotMotor->sampleMotorSpeed.RightFrontMotorSpeed = ENCODER_VALUE2RAD(RightFrontEncoderValue) / sampleTick;
+    impBotMotor->sampleMotorSpeed.LeftBackMotorSpeed   = ENCODER_VALUE2RAD(LeftBackEncoderValue)   / sampleTick;
+    impBotMotor->sampleMotorSpeed.RightBackMotorSpeed  = ENCODER_VALUE2RAD(RightBackEncoderValue)  / sampleTick;
 
     __HAL_TIM_SET_COUNTER(&htim5,0);
     __HAL_TIM_SET_COUNTER(&htim3,0);

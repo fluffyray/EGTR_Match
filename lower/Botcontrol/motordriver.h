@@ -10,10 +10,7 @@
 
 #define MOTORNUM ((int)4)
 
-const float MAXSPEED = 10;
-
-typedef struct MotorDriver{
-
-}MotorDriver;
+#define MAXSPEED ((float)35)
+void TIMMotorDriverHander();
 
 #endif //LOWER_MOTORDRIVER_H
