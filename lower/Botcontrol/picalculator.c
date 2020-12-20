@@ -6,6 +6,7 @@
 #include <math.h>
 #define ZERO ((float)0.001)
 
+
 typedef struct ImpPICalculator{
     float parmP;
     float parmI;
@@ -30,8 +31,9 @@ void getResults_PICalculator(PICalculator piCalculator,const float * targetValue
     for (int i = 0; i < impPIcalculator->valueSize; ++i) {
         Cbias[i] = targetValue[i] - sampleValue[i];
 				//if(fabs(Cbias[i]) < ZERO) Cbias[i] = 0;
-        value[i] += impPIcalculator->parmP * (Cbias[i] - impPIcalculator->PbiasValue[i])
-                   + impPIcalculator->parmI * Cbias[i]; //calculate value
+			float kp = impPIcalculator->parmP * (Cbias[i] - impPIcalculator->PbiasValue[i]);
+			float ki = impPIcalculator->parmI * Cbias[i];
+      value[i] += kp+ki;
     }
     memcpy(impPIcalculator->PbiasValue, Cbias, impPIcalculator->valueSize * sizeof(float ));// save bias
     free(Cbias);

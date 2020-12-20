@@ -26,8 +26,8 @@ void serialInfoHander(char* data,int length)
 	bot = json_object_get(root,"bot");
 	if(!json_is_object(bot)) return;
 	
-	THROTTLE = json_real_value(json_object_get(bot,"throttle"));
-	DIRECTION = json_real_value(json_object_get(bot,"direction"));
+	THROTTLE = json_integer_value(json_object_get(bot,"throttle"));
+	DIRECTION = json_integer_value(json_object_get(bot,"direction"));
 	MOVEMODE = (char*)json_string_value(json_object_get(bot,"movemode"));
 	
 	if (NULL == MOVEMODE) return;
@@ -62,10 +62,12 @@ void rotate(float throttle,float direction)
 {
 	MotorSpeed motorspeed;
 	
-	float v = (abs((int)direction)/(int)direction)*throttle*AXE_LEN;
+	float v = (abs((int)direction)/(int)direction)*T2S(throttle)*AXE_LEN;
 	
 	motorspeed.LeftFrontMotorSpeed  = -v;
 	motorspeed.RightFrontMotorSpeed = v;
 	motorspeed.LeftBackMotorSpeed   = -v;
 	motorspeed.RightBackMotorSpeed  = v;
+	
+	setTargetSpeed_BotMotor(BOTMOTOR,&motorspeed);
 }

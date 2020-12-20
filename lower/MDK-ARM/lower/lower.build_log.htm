@@ -27,62 +27,7 @@ Project File Date:  12/20/2020
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 4 (build 422)', folder: 'E:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'lower'
-compiling motordriver.c...
-..\Botcontrol\motordriver.h(14): warning:  #1295-D: Deprecated declaration TIMMotorDriverHander - give arg types
-  void TIMMotorDriverHander();
-..\Botcontrol\motordriver.c(29): warning:  #188-D: enumerated type mixed with another type
-      HAL_GPIO_WritePin(
-PIOE,
-PIO_PIN_5,isPositive[0]);//FrontLIN1
-..\Botcontrol\motordriver.c(30): warning:  #188-D: enumerated type mixed with another type
-      HAL_GPIO_WritePin(
-PIOC,
-PIO_PIN_13,!isPositive[0]);//FrontLIN2
-..\Botcontrol\motordriver.c(32): warning:  #188-D: enumerated type mixed with another type
-      HAL_GPIO_WritePin(
-PIOE,
-PIO_PIN_3,!isPositive[1]);//FrontRIN1
-..\Botcontrol\motordriver.c(33): warning:  #188-D: enumerated type mixed with another type
-      HAL_GPIO_WritePin(
-PIOE,
-PIO_PIN_1,isPositive[1]);//FrontRIN2
-..\Botcontrol\motordriver.c(35): warning:  #188-D: enumerated type mixed with another type
-      HAL_GPIO_WritePin(
-PIOB,
-PIO_PIN_0,isPositive[2]);//BackLIN1
-..\Botcontrol\motordriver.c(36): warning:  #188-D: enumerated type mixed with another type
-      HAL_GPIO_WritePin(
-PIOB,
-PIO_PIN_1,!isPositive[2]);//BackLIN2
-..\Botcontrol\motordriver.c(38): warning:  #188-D: enumerated type mixed with another type
-      HAL_GPIO_WritePin(
-PIOC,
-PIO_PIN_5,!isPositive[3]);//BackRIN1
-..\Botcontrol\motordriver.c(39): warning:  #188-D: enumerated type mixed with another type
-      HAL_GPIO_WritePin(
-PIOC,
-PIO_PIN_4,isPositive[3]);//BackRIN2
-..\Botcontrol\motordriver.c: 9 warnings, 0 errors
-compiling serialcontrolor.c...
-..\Botcontrol\motordriver.h(14): warning:  #1295-D: Deprecated declaration TIMMotorDriverHander - give arg types
-  void TIMMotorDriverHander();
-..\Botcontrol\serialcontrolor.c(63): warning:  #550-D: variable "motorspeed"  was set but never used
-  	MotorSpeed motorspeed;
-..\Botcontrol\serialcontrolor.c: 2 warnings, 0 errors
-compiling main.c...
-..\Botcontrol\motordriver.h(14): warning:  #1295-D: Deprecated declaration TIMMotorDriverHander - give arg types
-  void TIMMotorDriverHander();
-..\Botstatus\serialsend.h(4): warning:  #1295-D: Deprecated declaration TIMSerialSendHander - give arg types
-  void TIMSerialSendHander();
-..\Botstatus\serialsend.h(5): warning:  #1-D: last line of file ends without a newline
-  #endif //LOWER_PICALCULATOR_H
-../Src/main.c(141): warning:  #167-D: argument of type "char *" is incompatible with parameter of type "uint8_t *"
-  	HAL_UART_Receive_IT(&huart1,&usartRVBuff, 1);
-../Src/main.c: 4 warnings, 0 errors
-linking...
-Program Size: Code=27516 RO-data=876 RW-data=96 ZI-data=2568  
-FromELF: creating hex file...
-"lower\lower.axf" - 0 Error(s), 15 Warning(s).
+"lower\lower.axf" - 0 Error(s), 0 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -109,10 +54,10 @@ Package Vendor: Keil
    * Component: ARM::CMSIS:CORE:5.0.0
 
    * Component: Keil::Data Exchange:JSON:Jansson:2.7.0
+      Include file:  src\jansson.h
       Source file:   src\jansson_config.c
       Library file:  lib\jansson_CM3LE.lib
-      Include file:  src\jansson.h
-Build Time Elapsed:  00:00:02
+Build Time Elapsed:  00:00:00
 </pre>
 </body>
 </html>

@@ -35,7 +35,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
- char info[128];
+ char info[256];
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -217,8 +217,8 @@ void USART1_IRQHandler(void)
 		return;
 	}
 	info[count] = '\0';
-	serialInfoHander(info,128);
-	memset(info,0,128);
+	serialInfoHander(info,256);
+	memset(info,0,256);
 	HAL_UART_Receive_IT(&huart1,&usartRVBuff, 1);
 	count = 0;
   /* USER CODE END USART1_IRQn 1 */

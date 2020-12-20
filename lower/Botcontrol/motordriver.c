@@ -6,6 +6,8 @@
 
 #define STRENGTH2PWM(value) value
 float speedStrength[4];
+float speedPWM[4];
+unsigned char isPositive[4];
 void TIMMotorDriverHander(){
     static PICalculator* PIcalculator = NULL;
     if (NULL == PIcalculator){
@@ -19,10 +21,10 @@ void TIMMotorDriverHander(){
     getResults_PICalculator(PIcalculator,(const float * )&targetSpeed,(const float * )&sampleSpeed,speedStrength);
 		//memcpy(speedStrength,&targetSpeed,sizeof(float)*4);
 		
-    unsigned char isPositive[MOTORNUM+1];
+    
     for (int i = 0; i <MOTORNUM; ++i) {
 			isPositive[i] = speedStrength[i] > 0;
-			isPositive[i]==0 ?  (speedStrength[i] = -speedStrength[i]):0;
+			isPositive[i]==0 ?  (speedPWM[i] = -speedStrength[i]):(speedPWM[i] = speedStrength[i]);
     }
 
     //motor direction
@@ -39,10 +41,10 @@ void TIMMotorDriverHander(){
     HAL_GPIO_WritePin(GPIOC,GPIO_PIN_4,isPositive[3]);//BackRIN2
 
     //motor current strength
-    __HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_1,STRENGTH2PWM(speedStrength[0]));
-    __HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_4,STRENGTH2PWM(speedStrength[1]));
-    __HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_2,STRENGTH2PWM(speedStrength[2]));
-    __HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_3,STRENGTH2PWM(speedStrength[3]));
+    __HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_1,STRENGTH2PWM(speedPWM[0]));
+    __HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_4,STRENGTH2PWM(speedPWM[1]));
+    __HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_2,STRENGTH2PWM(speedPWM[2]));
+    __HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_3,STRENGTH2PWM(speedPWM[3]));
 
 
 }
