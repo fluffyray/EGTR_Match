@@ -149,7 +149,7 @@ int main(void)
 	HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_3);
 	HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_4);
 	
-	MotorSpeed speed = {10,10,10,10};
+	MotorSpeed speed = {0,0,0,0};
 	setTargetSpeed_BotMotor(BOTMOTOR,&speed);
 	
   while (1)
