@@ -211,7 +211,7 @@ void USART1_IRQHandler(void)
   /* USER CODE END USART1_IRQn 0 */
   HAL_UART_IRQHandler(&huart1);
   /* USER CODE BEGIN USART1_IRQn 1 */
-	if(usartRVBuff != '\0'){
+	if(usartRVBuff != '\0' || count < 256){
 		info[count++] = usartRVBuff;
 		HAL_UART_Receive_IT(&huart1,&usartRVBuff, 1);
 		return;
@@ -219,8 +219,9 @@ void USART1_IRQHandler(void)
 	info[count] = '\0';
 	serialInfoHander(info,256);
 	memset(info,0,256);
-	HAL_UART_Receive_IT(&huart1,&usartRVBuff, 1);
 	count = 0;
+	HAL_UART_Receive_IT(&huart1,&usartRVBuff, 1);
+	
   /* USER CODE END USART1_IRQn 1 */
 }
 
