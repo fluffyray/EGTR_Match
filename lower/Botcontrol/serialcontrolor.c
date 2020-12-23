@@ -10,10 +10,10 @@
 #define pi ((double)3.1415926)
 #define T2S(v) ((v/100.0f)*MAXSPEED)
 
-float AXE_LEN = 0.145;
+float AXE_LEN = 1.93;
 float THROTTLE;
 float DIRECTION;
-char* MOVEMODE;
+char* MOVEMODE; 
 
 void serialInfoHander(char* data,int length)
 {
@@ -30,6 +30,8 @@ void serialInfoHander(char* data,int length)
 	DIRECTION = json_integer_value(json_object_get(bot,"direction"));
 	MOVEMODE = (char*)json_string_value(json_object_get(bot,"movemode"));
 	
+	json_delete(root);
+	json_delete(bot);
 	if (NULL == MOVEMODE) return;
 	if(strcmp(MOVEMODE,"translation") == 0){
 		translation(THROTTLE,DIRECTION);
@@ -52,8 +54,8 @@ void translation(float throttle,float direction)
 	
 	motorspeed.LeftFrontMotorSpeed  = ax + ay;
 	motorspeed.RightFrontMotorSpeed = -ax + ay;
-	motorspeed.LeftBackMotorSpeed   = ax + ay;
-	motorspeed.RightBackMotorSpeed  = -ax + ay;
+	motorspeed.LeftBackMotorSpeed   = -ax + ay;
+	motorspeed.RightBackMotorSpeed  = ax + ay;
 
 	setTargetSpeed_BotMotor(BOTMOTOR,&motorspeed);
 }
