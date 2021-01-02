@@ -210,48 +210,48 @@ int UART_Send(int fd, char *send_buf,int data_len)
 
 
 
-int main()
-{
-    int fd = FALSE;             
-    int ret;                          
-    char rcv_buf[512];
-    int i;
-    if(argc != 2){
-     printf("Usage: %s /dev/ttySn \n",argv[0]);    
-     return FALSE;    
-    }
-    fd = UART_Open(fd,argv[1]);
-    if(FALSE == fd){    
-     printf("open error\n");    
-     exit(1);     
-    }
-    ret = UART_Init(fd,9600,0,8,1,'N');
-    if (FALSE == fd){    
-     printf("Set Port Error\n");    
-     exit(1);
-    }
+// int main()
+// {
+//     int fd = FALSE;             
+//     int ret;                          
+//     char rcv_buf[512];
+//     int i;
+//     if(argc != 2){
+//      printf("Usage: %s /dev/ttySn \n",argv[0]);    
+//      return FALSE;    
+//     }
+//     fd = UART_Open(fd,argv[1]);
+//     if(FALSE == fd){    
+//      printf("open error\n");    
+//      exit(1);     
+//     }
+//     ret = UART_Init(fd,9600,0,8,1,'N');
+//     if (FALSE == fd){    
+//      printf("Set Port Error\n");    
+//      exit(1);
+//     }
     
-    ret = UART_Send(fd,"*IDN?\n",6);
-    if(FALSE == ret){
-     printf("write error!\n");
-     exit(1);
-    }
+//     ret = UART_Send(fd,"*IDN?\n",6);
+//     if(FALSE == ret){
+//      printf("write error!\n");
+//      exit(1);
+//     }
     
-    printf("command: %s\n","*IDN?");
-    memset(rcv_buf,0,sizeof(rcv_buf));
-    for(i=0;;i++)
-    {
-     ret = UART_Recv(fd, rcv_buf,512);    
-         if( ret > 0){
-         rcv_buf[ret]='\0';        
-         printf("%s",rcv_buf);    
-     } else {    
-     printf("cannot receive data1\n");    
-            break;
-     }
-     if('\n' == rcv_buf[ret-1])
-         break;
-    }
-    UART_Close(fd);
-    return 0;
-}
+//     printf("command: %s\n","*IDN?");
+//     memset(rcv_buf,0,sizeof(rcv_buf));
+//     for(i=0;;i++)
+//     {
+//      ret = UART_Recv(fd, rcv_buf,512);    
+//          if( ret > 0){
+//          rcv_buf[ret]='\0';        
+//          printf("%s",rcv_buf);    
+//      } else {    
+//      printf("cannot receive data1\n");    
+//             break;
+//      }
+//      if('\n' == rcv_buf[ret-1])
+//          break;
+//     }
+//     UART_Close(fd);
+//     return 0;
+// }

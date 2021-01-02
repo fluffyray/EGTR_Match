@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include <cstring>
-//#include "cserial.h"
+#include "cserial.h"
 #include <cstdio>
 #include <cstdlib>
 #include "json.hpp"
@@ -18,7 +18,7 @@ int direction= 270;//方向，初始方向为正前方
 string movemode = "translation";//移动模式，初始为平动
 int axe[5] = {37,513,409,425,880};//舵机移动角度，初始为静止状态
 char *out=NULL;//json文件字符，初始为空
-//int fd = FALSE;
+int fd = FALSE;
 
 void initSpeed();//速度
 void changeSpeed();//改变速度
@@ -144,7 +144,7 @@ void axeMoveStep1(){//抓取动作步骤1
     axeCatchSpace();
     jsonCreated();
     //    UART_Send(fd,out,strlen(out));
-    _sleep(1000);
+    usleep(1000);
     axeCatch();
     jsonCreated();
     //    UART_Send(fd,out,strlen(out));
@@ -154,7 +154,7 @@ void axePutStep1(){//放置物块至小车动作步骤1
     axeLoad1();
     jsonCreated();
     //    UART_Send(fd,out,strlen(out));
-    _sleep(1000);
+    usleep(1000);
     axePut();
     jsonCreated();
     //    UART_Send(fd,out,strlen(out));
@@ -164,7 +164,7 @@ void axePutStep2(){//放置物块至小车动作步骤2
     axeLoad2();
     jsonCreated();
     //    UART_Send(fd,out,strlen(out));
-    _sleep(1000);
+    usleep(1000);
     axePut();
     jsonCreated();
     //    UART_Send(fd,out,strlen(out));
@@ -174,7 +174,7 @@ void axePutStep3(){//放置物块至小车动作步骤3
     axeLoad3();
     jsonCreated();
     //    UART_Send(fd,out,strlen(out));
-    _sleep(1000);
+    usleep(1000);
     axePut();
     jsonCreated();
     //    UART_Send(fd,out,strlen(out));
@@ -214,7 +214,7 @@ void moveStep1(){
     //jsonCreated();
     //printf("%s\n",out);
 //    UART_Send(fd,out,strlen(out));
-    //_sleep(1000);//延时函数，时间为？ms
+    //usleep(1000);//延时函数，时间为？ms
 }
 
 //行进至物料抓取处，停止(通过调节延时函数，确定行进距离）
@@ -232,7 +232,7 @@ void moveStep2(){
     //jsonCreated();
     //printf("%s\n",out);
 //    UART_Send(fd,out,strlen(out));
-    //_sleep(1000);//延时函数，时间为？ms
+    //usleep(1000);//延时函数，时间为？ms
 }
 
 //前行 转弯 前行 停下
@@ -244,7 +244,7 @@ void moveStep3(){
     jsonCreated();
     printf("%s\n",out);
 //    UART_Send(fd,out,strlen(out));
-    _sleep(1000);//延时函数，时间为？ms
+    usleep(1000);//延时函数，时间为？ms
 
     modeChange();
     changeSpeed();
@@ -253,46 +253,46 @@ void moveStep3(){
     jsonCreated();
     printf("%s\n",out);
 //    UART_Send(fd,out,strlen(out));
-    _sleep(1000);//延时函数，时间为？ms
+    usleep(1000);//延时函数，时间为？ms
 }
 
 
-int main() {
+int main(int argc,char** argv) {
     int i;
     char rcv_buf[512];//接收字符集，
     int ret;
 
-//    if (argc != 2) {//根据argc的值判断是否进行串口的通信
-//        printf("Usage:/dev/ttySn \n");
-//        return FALSE;
-//    }
-//    fd = UART_Open(fd, argv[1]);//判断端口是否开启
-//    if (FALSE == fd) {
-//        printf("open error\n");
-//        exit(1);
-//    }
-//    ret = UART_Init(fd, 9600, 0, 8, 1, 'N');
-//    if (FALSE == fd) {
-//        printf("Set Port Error\n");
-//        exit(1);
-//    }
+   if (argc != 2) {//根据argc的值判断是否进行串口的通信
+       printf("Usage:/dev/ttySn \n");
+       return FALSE;
+   }
+   fd = UART_Open(fd, argv[1]);//判断端口是否开启
+   if (FALSE == fd) {
+       printf("open error\n");
+       exit(1);
+   }
+   ret = UART_Init(fd, 9600, 0, 8, 1, 'N');
+   if (FALSE == fd) {
+       printf("Set Port Error\n");
+       exit(1);
+   }
     moveStep1();
-    //moveStep2();
-//
-//    memset(rcv_buf, 0, sizeof(rcv_buf));
-//    for (i = 0;; i++) {
-//        ret = UART_Recv(fd, rcv_buf, 512);
-//
-//        if (ret > 0) {
-//            rcv_buf[ret] = '\0';
-//            printf("%s", rcv_buf);
-//        } else {
-//            printf("cannot receive data1\n");
-//            break;
-//        }
-//        if ('\n' == rcv_buf[ret - 1])
-//            break;
-//    }
-//    UART_Close(fd);
+    moveStep2();
+
+   memset(rcv_buf, 0, sizeof(rcv_buf));
+   for (i = 0;; i++) {
+       ret = UART_Recv(fd, rcv_buf, 512);
+
+       if (ret > 0) {
+           rcv_buf[ret] = '\0';
+           printf("%s", rcv_buf);
+       } else {
+           printf("cannot receive data1\n");
+           break;
+       }
+       if ('\n' == rcv_buf[ret - 1])
+           break;
+   }
+   UART_Close(fd);
     return 0;
 }
