@@ -1,3 +1,6 @@
-project(EGTR_Match_Upper)
+cmake_minimum_required(VERSION 3.17)
+project(Upper)
 
-add_executable(EGTR_Match_Upper main.cpp Device/serialportdevice.cpp Device/botdevice.cpp Device/botdevice.h Control/icontroler.h Control/controlerfactor.cpp Control/controlerfactor.h Control/controlerregister.cpp Control/controlerregister.h Communication/serialcommunicate.h)
+set(CMAKE_CXX_STANDARD 14)
+
+add_executable(Upper main.cpp)
