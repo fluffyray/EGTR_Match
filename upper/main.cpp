@@ -4,11 +4,12 @@
 
 #include <iostream>
 #include <cstring>
-#include "cserial.h"
 #include <cstdio>
 #include <cstdlib>
 #include "json.hpp"
 #include <unistd.h>
+#include "wiringSerial.h"
+
 
 using json = nlohmann::json;
 using namespace std;
@@ -18,7 +19,7 @@ int direction= 270;//方向，初始方向为正前方
 string movemode = "translation";//移动模式，初始为平动
 int axe[5] = {37,513,409,425,880};//舵机移动角度，初始为静止状态
 char *out=NULL;//json文件字符，初始为空
-int fd = FALSE;
+int fd;
 
 void initSpeed();//速度
 void changeSpeed();//改变速度
@@ -40,19 +41,16 @@ void axeInit();//初始化
                         void axePut();//放置动作
 
 void initSpeed(){//初始化速度
-    throttle=60;
-    //printf("%f",throttle);
+    throttle=15;
 }
 
 void changeSpeed(){//改变初始速度与转动速度
     if(movemode=="translation"){
-        throttle=60;
+        throttle=15;
     }
     else if(movemode=="rotate"){
         throttle=15;
     }
-
-    //printf("%f",throttle);
 }
 
 void stopMove(){//停下小车
@@ -60,26 +58,19 @@ void stopMove(){//停下小车
 }
 
 void waytoDrive(){//初始化前进方向
-    direction= 270;
-    //printf("%f",direction);
+    direction= 90;
 }
 
 void changeWaytoDrive(){//改变前进方向
-    if(movemode=="translation"){
-        if(direction>=0)
-        direction=direction;
-        else
-            direction=direction+360;
-    }
-    else if(movemode=="rotate"){
-        direction=(direction-90)%360;
-    }
-    //printf("%f",direction);
+    direction= 180;
+}
+
+void rotatetoDirection(){//旋转时方向
+    direction= -90;
 }
 
 void initMode(){//初始化移动模式
     movemode="translation";
-    //printf("%s",movemode.c_str());
 }
 
 void modeChange(){//改变移动模式方法
@@ -89,99 +80,207 @@ void modeChange(){//改变移动模式方法
     else if(movemode=="rotate"){
         movemode="translation";
     }
-    //printf("%s",movemode.c_str());
 }
 
 void axeInit(){//初始化
-    axe[0]=37;
-    axe[1]=513;
-    axe[2]=409;
-    axe[3]=425;
+    axe[0]=497;
+    axe[1]=669;
+    axe[2]=24308;
+    axe[3]=34446;
     axe[4]=880;
+    jsonCreated();
+    serialPuts(fd,out);
 }
 
-void axeCatchSpace(){//抓取位置
-    axe[0]=270;
-    axe[1]=513;
-    axe[2]=409;
-    axe[3]=425;
+void axeCatchSpaceRed(){//抓取位置红
+    axe[0]=741;
+    axe[1]=409;
+    axe[2]=52;
+    axe[3]=438;
+    jsonCreated();
+    serialPuts(fd,out);
 }
 
-void axeLoad1(){//放置位置1
+void axeCatchSpaceGreen(){//抓取位置绿
+    axe[0]=831;
+    axe[1]=566;
+    axe[2]=300;
+    axe[3]=442;
+    jsonCreated();
+    serialPuts(fd,out);
+}
+void axeCatchSpaceBlue(){//抓取位置蓝
+    axe[0]=992;
+    axe[1]=515;
+    axe[2]=390;
+    axe[3]=441;
+    jsonCreated();
+    serialPuts(fd,out);
+}
+
+void axeWaitRed(){//悬空位置红
+    axe[0]=714;
+    axe[1]=669;
+    axe[2]=24308;
+    axe[3]=34446;
+    jsonCreated();
+    serialPuts(fd,out);
+}
+
+void axeWaitGreen(){//悬空位置绿
+    axe[0]=831;
+    axe[1]=669;
+    axe[2]=24308;
+    axe[3]=34446;
+    jsonCreated();
+    serialPuts(fd,out);
+}
+
+void axeWaitBlue(){//悬空位置蓝
+    axe[0]=992;
+    axe[1]=669;
+    axe[2]=24308;
+    axe[3]=34446;
+    jsonCreated();
+    serialPuts(fd,out);
+}
+
+void axeLoad1(){//放置位置红右
     axe[0]=620;
     axe[1]=491;
     axe[2]=2;
     axe[3]=5;
+    jsonCreated();
+    serialPuts(fd,out);
 }
 
-void axeLoad2(){//放置位置2
+void axeLoad2(){//放置位置绿中
     axe[0]=511;
     axe[1]=491;
     axe[2]=2;
     axe[3]=5;
+    jsonCreated();
+    serialPuts(fd,out);
 }
 
-void axeLoad3(){//放置位置3
+void axeLoad3(){//放置位置蓝左
     axe[0]=408;
     axe[1]=491;
     axe[2]=2;
     axe[3]=5;
+    jsonCreated();
+    serialPuts(fd,out);
+}
+
+void axeLoadtoGroundRed() {//放置地面红
+    axe[0] = 728;
+    axe[1] = 280;
+    axe[2] = 391;
+    axe[3] = 191;
+    jsonCreated();
+    serialPuts(fd, out);
+}
+
+void axeLoadtoGroundGreen(){//放置地面绿
+    axe[0]=875;
+    axe[1]=280;
+    axe[2]=391;
+    axe[3]=191;
+    jsonCreated();
+    serialPuts(fd,out);
+}
+
+void axeLoadtoGroundBlue(){//放置地面蓝
+    axe[0]=996;
+    axe[1]=280;
+    axe[2]=391;
+    axe[3]=191;
+
 }
 
 void axeCatch(){//抓取动作
     axe[4]=980;
+    jsonCreated();
+    serialPuts(fd,out);
 }
 
 void axePut(){//放置动作
     axe[4]=880;
+    jsonCreated();
+    serialPuts(fd,out);
 }
 
 void qrcodeAndColorIdentify(){
 
 }
 
-void axeMoveStep1(){//抓取动作步骤1
-    axeCatchSpace();
-    jsonCreated();
-    //    UART_Send(fd,out,strlen(out));
+void axeMoveStepRed() {//抓取动作步骤红
+    axeInit();
+    axeWaitRed();
+    axeCatchSpaceRed();
+    usleep(1000);//单位为微秒 （百万分之一秒）
+    axeCatch();
+}
+
+void axePutStepRed(){//放置物块至小车动作步骤红
+    axeWaitRed();
+    axeLoad1();
+    usleep(1000);
+    axePut();
+}
+
+void axePuttoGroundRed(){//放置物块至固定位置红
+    axeInit();
+    axeLoad1();
+    axeCatch();
+    usleep(100);
+    axeLoadtoGroundRed();
+    axePut();
+}
+
+void axeMoveStepGreen(){//抓取动作步骤绿
+    axeInit();
+    axeWaitGreen();
+    axeCatchSpaceGreen();
     usleep(1000);
     axeCatch();
-    jsonCreated();
-    //    UART_Send(fd,out,strlen(out));
 }
 
-void axePutStep1(){//放置物块至小车动作步骤1
-    axeLoad1();
-    jsonCreated();
-    //    UART_Send(fd,out,strlen(out));
-    usleep(1000);
-    axePut();
-    jsonCreated();
-    //    UART_Send(fd,out,strlen(out));
-}
-
-void axePutStep2(){//放置物块至小车动作步骤2
+void axePutStepGreen(){//放置物块至小车动作步骤绿
     axeLoad2();
-    jsonCreated();
-    //    UART_Send(fd,out,strlen(out));
     usleep(1000);
     axePut();
-    jsonCreated();
-    //    UART_Send(fd,out,strlen(out));
 }
 
-void axePutStep3(){//放置物块至小车动作步骤3
+void axePuttoGroundGreen(){//放置物块至固定位置绿
+    axeInit();
+    axeLoad2();
+    axeCatch();
+    usleep(100);
+    axeLoadtoGroundGreen();
+    axePut();
+}
+
+void axeMoveStepBlue(){//抓取动作步骤蓝
+    axeInit();
+    axeWaitBlue();
+    axeCatchSpaceBlue();
+    usleep(1000);
+    axeCatch();
+}
+
+void axePutStepBlue(){//放置物块至小车动作步骤蓝
     axeLoad3();
-    jsonCreated();
-    //    UART_Send(fd,out,strlen(out));
-    usleep(1000);
     axePut();
-    jsonCreated();
-    //    UART_Send(fd,out,strlen(out));
 }
 
-void axePutToTarget(){//
-
+void axePuttoGroundBlue(){//放置物块至固定位置蓝
+    axeInit();
+    axeLoad3();
+    axeCatch();
+    usleep(100);
+    axeLoadtoGroundBlue();
+    axePut();
 }
 
 void jsonCreated() {
@@ -196,6 +295,7 @@ void jsonCreated() {
             {"axe", {0, 0, 0, 0, 0, 0, 0}}
     };
     std::string output = root.dump();
+    output = output + "/0";
     out = (char *) output.c_str();
     root.clear();
 }
@@ -204,17 +304,24 @@ void jsonCreated() {
 void moveStep1(){
     initMode();
     initSpeed();
+    changeWaytoDrive();
+    axeInit();
+    jsonCreated();
+    serialPuts(fd,out);
+    usleep();//走出起点方块格所用时间
+
+    initMode();
+    initSpeed();
     waytoDrive();
     axeInit();
     jsonCreated();
-    printf("%s\n",out);
-//    UART_Send(fd,out,strlen(out));
-    //sleep(1000);//延时函数，时间为？ms
-    //stopMove();
-    //jsonCreated();
-    //printf("%s\n",out);
-//    UART_Send(fd,out,strlen(out));
-    //usleep(1000);//延时函数，时间为？ms
+    serialPuts(fd,out);
+    usleep();//
+
+    stopMove();
+    jsonCreated();
+    serialPuts(fd,out);
+    usleep();//
 }
 
 //行进至物料抓取处，停止(通过调节延时函数，确定行进距离）
@@ -224,75 +331,97 @@ void moveStep2(){
     waytoDrive();
     axeInit();
     jsonCreated();
-    printf("%s\n",out);
-//    UART_Send(fd,out,strlen(out));
-    //sleep(1000);//延时函数，时间为？ms
+    serialPuts(fd,out);
+    usleep();//
 
-    //stopMove();
-    //jsonCreated();
-    //printf("%s\n",out);
-//    UART_Send(fd,out,strlen(out));
-    //usleep(1000);//延时函数，时间为？ms
+    stopMove();
+    jsonCreated();
+    serialPuts(fd,out);
+    usleep();//
+
+    axeMoveStepRed();
+    axePutStepRed();
+    axeMoveStepBlue();
+    axePutStepBlue();
+    axeMoveStepGreen();
+    axePutStepGreen();
 }
 
-//前行 转弯 前行 停下
+//右行 前进 停下 放置
 void moveStep3(){
+    initMode();
+    initSpeed();
+    changeWaytoDrive();
+    axeInit();
+    jsonCreated();
+    serialPuts(fd,out);
+    usleep();
+
     initMode();
     initSpeed();
     waytoDrive();
     axeInit();
     jsonCreated();
-    printf("%s\n",out);
-//    UART_Send(fd,out,strlen(out));
-    usleep(1000);//延时函数，时间为？ms
+    serialPuts(fd,out);
+    usleep();
 
     modeChange();
     changeSpeed();
+    rotatetoDirection();
+    axeInit();
+    jsonCreated();
+    serialPuts(fd,out);
+    usleep(1270000);//原地转动方向
+
+    axePuttoGroundRed();
+    axePuttoGroundBlue();
+    axePuttoGroundGreen();
+
+
+}
+
+void movestep4(){
+    initMode();
+    initSpeed();
     changeWaytoDrive();
     axeInit();
     jsonCreated();
-    printf("%s\n",out);
-//    UART_Send(fd,out,strlen(out));
-    usleep(1000);//延时函数，时间为？ms
+    serialPuts(fd,out);
+    usleep();
+
+    initMode();
+    initSpeed();
+    waytoDrive();
+    axeInit();
+    jsonCreated();
+    serialPuts(fd,out);
+    usleep();
+
+    modeChange();
+    changeSpeed();
+    rotatetoDirection();
+    axeInit();
+    jsonCreated();
+    serialPuts(fd,out);
+    usleep(1270000);//原地转动方向
+
 }
 
 
-int main(int argc,char** argv) {
+int main() {
     int i;
-    char rcv_buf[512];//接收字符集，
     int ret;
 
-   if (argc != 2) {//根据argc的值判断是否进行串口的通信
-       printf("Usage:/dev/ttySn \n");
-       return FALSE;
-   }
-   fd = UART_Open(fd, argv[1]);//判断端口是否开启
-   if (FALSE == fd) {
-       printf("open error\n");
-       exit(1);
-   }
-   ret = UART_Init(fd, 9600, 0, 8, 1, 'N');
-   if (FALSE == fd) {
-       printf("Set Port Error\n");
-       exit(1);
-   }
+    if ( (fd = serialOpen("/dev/ttySn",115200 )) == -1) {//根据argc的值判断是否进行串口的通信
+        printf("Usage:/dev/ttySn open error \n");
+        return -1;
+    }
+
     moveStep1();
     moveStep2();
+    moveStep3();
+    movestep4();
 
-   memset(rcv_buf, 0, sizeof(rcv_buf));
-   for (i = 0;; i++) {
-       ret = UART_Recv(fd, rcv_buf, 512);
-
-       if (ret > 0) {
-           rcv_buf[ret] = '\0';
-           printf("%s", rcv_buf);
-       } else {
-           printf("cannot receive data1\n");
-           break;
-       }
-       if ('\n' == rcv_buf[ret - 1])
-           break;
-   }
-   UART_Close(fd);
+    serialClose(fd);
     return 0;
 }
